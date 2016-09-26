@@ -1,9 +1,4 @@
 'use strict';
-require('three/examples/js/shaders/ConvolutionShader');
-require('three/examples/js/shaders/CopyShader');
-require('three/examples/js/postprocessing/EffectComposer');
-require('three/examples/js/postprocessing/RenderPass');
-require('three/examples/js/postprocessing/ShaderPass');
 
 var resizeCanvas = function() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -33,13 +28,37 @@ var cubeMaterial	= new THREE.MeshPhongMaterial({
 	});
 
 var cube = new THREE.Object3D();
-var cubeMesh = new THREE.Mesh( geometry, cubeMaterial );
+var cubeMesh= new THREE.Mesh( geometry, cubeMaterial );
 cube.position.y = 1;
 
-cube.add(cubeMesh);
 scene.add( cube );
 camera.position.z = 5;
 camera.position.y = 1;
+
+// car Mesh
+require('three/examples/js/loaders/ColladaLoader');
+var dae;
+var loader = new THREE.ColladaLoader();
+loader.options.convertUpAxis = true;
+loader.load( './models/audi.dae', function ( collada ) {
+    dae = collada.scene;
+	dae.traverse( function ( child ) {
+        if ( child instanceof THREE.SkinnedMesh ) {
+        	var animation = new THREE.Animation( child, child.geometry.animation );
+			animation.play();
+		}
+	} );
+    dae.scale.x = dae.scale.y = dae.scale.z = 0.05;
+	dae.updateMatrix();
+    dae.rotation.y = Math.PI / 180 * (180);
+    cube.add(dae);
+    cubeMesh = dae;
+    var daeMesh = dae.children[0].children[0];
+    var mat = daeMesh.material;
+    mat.map.minFilter = THREE.NearestFilter;
+    mat.map.magFilter = THREE.NearestFilter;
+} );
+
 
 ////////// terrain
 var Terrain = require('./terrain/terrain.js');
@@ -71,7 +90,7 @@ function onDocumentMouseMove( event ) {
 }
 document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
-var speed = 5;
+var speed = 10;
 var turnSpeed = 2.0;
 var deadZone = 0.05;
 var clock = new THREE.Clock();

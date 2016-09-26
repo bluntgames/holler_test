@@ -5,6 +5,7 @@ var resizeCanvas = function() {
     camera.updateProjectionMatrix();
     renderer.setSize( window.innerWidth, window.innerHeight );
 }
+
 window.onresize = function(event) {
     resizeCanvas();
 };
@@ -17,7 +18,6 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 var renderer = new THREE.WebGLRenderer();
 renderer.shadowMap.enabled = true;
-//renderer.shadowMap.renderReverseSided = true;
 renderer.setSize( window.innerWidth, window.innerHeight );
 container.appendChild(renderer.domElement);
 
@@ -73,16 +73,6 @@ var planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
 planeMesh.rotation.x = Math.PI / 180 * (-90);
 planeMesh.receiveShadow = true;
 scene.add(planeMesh);
-
-// Fog and sky..
-// var fogAmount = 0.06;
-// var fogColour = 0x00ccff;
-// scene.fog = new THREE.FogExp2(fogColour, fogAmount);
-//
-// var skyGeometry = new THREE.CubeGeometry( -1000 , -1000, -1000  );
-// var skyMaterial = new THREE.MeshBasicMaterial( { color: 0x00ccff } );
-// var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
-// scene.add( skyBox );
 
 // Lighting 
 var alight	= new THREE.AmbientLight( 0x202020 );

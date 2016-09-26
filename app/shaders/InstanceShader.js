@@ -1,4 +1,6 @@
 /**
+ * Apply instanced geometry offset/orientations. 
+ * Just a simple single colour output
  */
 
 THREE.InstanceShader = {
