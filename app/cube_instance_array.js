@@ -115,16 +115,23 @@ function CubeInstanceArray(instanceCount, scene) {
     }
     geometry.addAttribute( 'orientation', this.orientations ); // per mesh orientation
 
+    require('./shaders/InstanceShader');
+    require('./shaders/InstanceShaderDepth');
+
     var material = new THREE.RawShaderMaterial( {
-        vertexShader: document.getElementById( 'vertexShader' ).textContent,
-        fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+        //vertexShader: document.getElementById( 'vertexShader' ).textContent,
+        vertexShader: THREE.InstanceShader.vertexShader,
+        //fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+        fragmentShader: THREE.InstanceShader.fragmentShader,
         side: THREE.DoubleSide,
         transparent: false
     } );
 
     var depthMaterial = new THREE.RawShaderMaterial({
-        vertexShader: document.getElementById( 'depthVertexShader' ).textContent,
-        fragmentShader: document.getElementById( 'depthFragmentShader' ).textContent
+        //vertexShader: document.getElementById( 'depthVertexShader' ).textContent,
+        vertexShader: THREE.InstanceShaderDepth.vertexShader,
+        //fragmentShader: document.getElementById( 'depthFragmentShader' ).textContent
+        fragmentShader: THREE.InstanceShaderDepth.fragmentShader
     });
 
     var instanceMesh = new THREE.Mesh( geometry, material );
