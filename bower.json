@@ -1,0 +1,22 @@
+{
+  "name": "holler_test",
+  "description": "A test for Holler!",
+  "main": "index.js",
+  "authors": [
+    "Ryan Alcock <ryan@blunt-instrument.com>"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "stats.js": "https://github.com/mrdoob/stats.js.git",
+    "threex.rendererstats": "https://github.com/jeromeetienne/threex.rendererstats/archive/master.zip"
+  }
+}
