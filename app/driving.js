@@ -90,7 +90,7 @@ function onDocumentMouseMove( event ) {
 }
 document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
-var speed = 10;
+var speed = 8;
 var turnSpeed = 2.0;
 var deadZone = 0.05;
 var clock = new THREE.Clock();
@@ -120,7 +120,7 @@ var render = function () {
     }
     cube.rotation.y = yaw;
 
-    var localOffset = new THREE.Vector3(0,1,5);
+    var localOffset = new THREE.Vector3(0,1.5,5);
     var cameraOffset = localOffset.applyMatrix4(cube.matrixWorld);
     camera.position.x = cameraOffset.x;
     camera.position.y = cameraOffset.y;

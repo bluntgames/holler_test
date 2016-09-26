@@ -7,8 +7,8 @@ function Terrain(scene) {
     this.chunkWidth = 25;
     var halfChunk = this.chunkWidth / 2;
     this.chunkSegments = 25;
-    this.smoothness = 0.1;
-    this.maxHeight = 0.5;
+    this.smoothness = 0.04;
+    this.maxHeight = 1.5;
     
     var chunks = new Array();
 
