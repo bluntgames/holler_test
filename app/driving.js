@@ -110,7 +110,7 @@ var render = function () {
     cube.translateZ(-frameMovement);
 
     terrain.alignObject(cube, cubeMesh);
-    terrain.update();
+    terrain.update(cube.position);
 
     var frameRotation = delta * turnSpeed;
     if (mouse.x > deadZone) {
@@ -126,6 +126,9 @@ var render = function () {
     camera.position.y = cameraOffset.y;
     camera.position.z = cameraOffset.z;
     camera.lookAt(cube.position);
+
+    skyBox.position.x = cube.position.x;
+    skyBox.position.z = cube.position.z;
 
     renderer.render(scene, camera);
     stats.endFrame(renderer);

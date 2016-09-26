@@ -26,23 +26,66 @@ function Terrain(scene) {
 		color : 0x336600
 	});
 
-    var addChunk = function(id) {
-        var chunk = new TerrainChunk(_this, id);
+    this.createId = function(x, y) {
+        var id = (x & 0xffff) | ( (y << 16) & 0xffff0000);
+        return id;
+    }
+
+    this.createChunkDetail = function(x, y) {
+        return { id: _this.createId(x,y), x:x, y:y };
+    }
+
+    this.addChunk = function(x, y) {
+        var id = _this.createId(x,y);
+        var chunk = new TerrainChunk(_this, x, y);
         chunks[id] = chunk;
         scene.add(chunks[id].mesh());
         return chunk;
     }
 
-    //var id = _this.generateId_2D(pos.x, pos.z);
-    //var id = _this.generateId_2D(pos.x, pos.z);
-    //addChunk(-1);
-    //this.currentChunk = addChunk(0);
+    var checkChunk = function(chunkDetail) {
+        if (chunks[chunkDetail.id] === undefined){
+            //console.log('undefined chunk for id: ' + chunkDetail.id);
+            _this.addChunk(chunkDetail.x,chunkDetail.y);
+        }
+    }
 
-    //TODO: dynamic chunk radius
-    addChunk(0);
-    addChunk(-1);
-    addChunk(1);
+    this.generateId_2D = function(xPos, yPos) {
+        var x = _this.generateId_1D(xPos);
+        var y = _this.generateId_1D(yPos);
+        var id = _this.createId(x,y);
+        //var id = (x & 0xffff) | ( (y << 16) & 0xffff0000);
+        return {id: id, x: x, y: y};
+    }
 
+    this.generateId_1D = function(pos) {
+        var id = (pos + halfChunk) / _this.chunkWidth;
+        id = Math.floor(id);
+        return Math.floor(id);
+    }
+
+    this.getChunkPosition = function(id) {
+        var x = (id & 0xffff);
+        var y = ((id >> 16) & 0xffff);
+        return { x: x, y: y };
+    }
+
+    this.update = function(pos) {
+        var result = _this.generateId_2D(pos.x, pos.z);
+        checkChunk(result);
+
+        // check the chunk on all sides...
+        //TODO: only check this when crossing chunk boundaries
+        checkChunk( _this.createChunkDetail(result.x+1, result.y+1) );
+        checkChunk( _this.createChunkDetail(result.x,   result.y+1) );
+        checkChunk( _this.createChunkDetail(result.x-1, result.y+1) );
+        checkChunk( _this.createChunkDetail(result.x-1, result.y) );
+        checkChunk( _this.createChunkDetail(result.x-1, result.y-1) );
+        checkChunk( _this.createChunkDetail(result.x,   result.y-1) );
+        checkChunk( _this.createChunkDetail(result.x+1, result.y-1) );
+        checkChunk( _this.createChunkDetail(result.x+1, result.y) );
+    }
+    this.addChunk(0,0);
     //TODO: maybe add all the chunk to the heirachy of this terrain object.
     //this.terrainMesh.position.z = -5;
 
@@ -50,14 +93,13 @@ function Terrain(scene) {
     var ray = new THREE.Vector3(0,-1,0);
 
     this.getHeightAtPoint = function(pos) {
-        var id = _this.generateId_1D(pos.z);
-        //var id = _this.generateId_2D(pos.x, pos.z);
+        //var id = _this.generateId_1D(pos.z);
+        var result = _this.generateId_2D(pos.x, pos.z);
 
-        var chunk = chunks[id];
+        var chunk = chunks[result.id];
         if (chunk === undefined){
-            console.log('undefined chunk for id: ' + id);
-            chunk = addChunk(id);
-            //return {success : false};
+            console.log('undefined chunk for id: ' + result.id);
+            chunk = _this.addChunk(result.x,result.y);
         }
 
         var castPos = pos;
@@ -108,37 +150,6 @@ function Terrain(scene) {
         
         // rotating the mesh locally only...
         mesh.rotation.x = angle;
-    }
-
-    this.update = function(pos) {
-        //TODO: load/unload visible chunks based on distance from player
-
-        // //var id = generateId_2D(pos.x, pos.z);
-        // var chunk = chunks[id];
-        // if (chunk === undefined){
-        //     chunk = addChunk(id);            
-        // }
-        // currentChunk = chunk
-        // chunk.update(pos);
-    }
-
-    this.generateId_2D = function(xPos, yPos) {
-        var x = generateId_1D(xPos);
-        var y = generateId_1D(yPos);
-		var id = (x & 0xffff) | ( (y << 16) & 0xffff0000);
-		return id;
-	}
-
-    this.generateId_1D = function(pos) {
-        var id = (pos + halfChunk) / _this.chunkWidth;
-        id = Math.floor(id);
-        return Math.floor(id);
-	}
-
-    this.getChunkPosition = function(id) {
-		var x = (id & 0xffff);
-        var y = ((id >> 16) & 0xffff);
-		return { x: x, y: y };
     }
 }
 
