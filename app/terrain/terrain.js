@@ -75,6 +75,7 @@ function Terrain(scene) {
         checkChunk(result);
 
         // check the chunk on all sides...
+        //TODO: only check this when crossing chunk boundaries
         checkChunk( _this.createChunkDetail(result.x+1, result.y+1) );
         checkChunk( _this.createChunkDetail(result.x,   result.y+1) );
         checkChunk( _this.createChunkDetail(result.x-1, result.y+1) );
